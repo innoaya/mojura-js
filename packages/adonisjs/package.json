@@ -1,6 +1,6 @@
 {
   "name": "@mojura/adonisjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AdonisJS v7 adapter for Mojura Architecture - Ace CLI commands, stubs, and controller integration",
   "type": "module",
   "license": "Apache-2.0",
@@ -51,7 +51,7 @@
     "scaffolding"
   ],
   "dependencies": {
-    "@mojura/core": "workspace:*"
+    "@mojura/core": "^1.0.0"
   },
   "peerDependencies": {
     "@adonisjs/assembler": "^7.0.0 || ^8.0.0",

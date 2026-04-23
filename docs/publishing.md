@@ -54,38 +54,72 @@ cd packages/adonisjs
 npm publish --access public
 ```
 
-> **Note:** The `--access public` flag is required for scoped packages on the first publish. Subsequent publishes inherit the access level.
+> [!IMPORTANT]
+> The `--access public` flag is required for scoped packages on the first publish. Subsequent publishes inherit the access level.
+
+> [!WARNING]
+> **Do NOT use `workspace:*` in dependencies when publishing with `npm publish`.**
+> The `workspace:` protocol is a pnpm monorepo feature — `npm publish` publishes it as a literal string, which breaks installation. Always use a real semver range (e.g., `"^1.0.0"`) in the `dependencies` field before publishing.
+> If you use `pnpm publish`, it auto-replaces `workspace:*` with the actual version — but using explicit versions is safer and more predictable.
 
 ## Version Management
+
+### Independent Versioning
+
+Each package has its **own independent version number**. They do NOT need to match.
+
+```
+@mojura/core     → 1.0.0
+@mojura/adonisjs → 1.0.1   ← This is perfectly fine
+```
+
+This is standard practice for npm packages — even official AdonisJS packages have independent versions (`@adonisjs/core@7.3.1`, `@adonisjs/lucid@21.6.1`, etc.).
+
+**What matters** is the dependency constraint in `@mojura/adonisjs`:
+```json
+{
+  "dependencies": {
+    "@mojura/core": "^1.0.0"
+  }
+}
+```
+
+The `^1.0.0` range means "any version `>=1.0.0` and `<2.0.0`" — so `@mojura/core@1.0.0`, `1.0.5`, `1.2.0` etc. all satisfy it.
+
+### When to Bump Each Package
+
+| Scenario | Package to bump |
+|---|---|
+| Changed Feature/Job/QueueableJob base classes | `@mojura/core` |
+| Changed Ace commands, stubs, controller, or provider | `@mojura/adonisjs` |
+| Changed both | Bump both independently |
 
 ### Bumping Versions
 
 ```bash
-# Patch release (1.0.0 → 1.0.1)
-cd packages/core && npm version patch
-cd packages/adonisjs && npm version patch
+# Patch release (bug fix: 1.0.0 → 1.0.1)
+npm version patch
 
-# Minor release (1.0.0 → 1.1.0)
-cd packages/core && npm version minor
-cd packages/adonisjs && npm version minor
+# Minor release (new feature, backward-compatible: 1.0.0 → 1.1.0)
+npm version minor
 
-# Major release (1.0.0 → 2.0.0)
-cd packages/core && npm version major
-cd packages/adonisjs && npm version major
+# Major release (breaking change: 1.0.0 → 2.0.0)
+npm version major
 ```
 
-### Keeping Versions in Sync
+### When to Update the Dependency Range
 
-Both packages should be bumped together for consistency:
+Only update the `@mojura/core` dependency in `@mojura/adonisjs` when:
+- A **new core feature** is required by the adapter (bump minor, update range)
+- A **breaking change** is made to core (bump major, update range)
 
-```bash
-# Bump both packages to the same version
-cd packages/core && npm version 1.1.0
-cd packages/adonisjs && npm version 1.1.0
-
-# Update @mojura/adonisjs dependency on @mojura/core
-# In packages/adonisjs/package.json:
-# "dependencies": { "@mojura/core": "^1.1.0" }
+```json
+// If @mojura/core releases 2.0.0 with breaking changes:
+{
+  "dependencies": {
+    "@mojura/core": "^2.0.0"
+  }
+}
 ```
 
 ## Pre-Release Versions
@@ -94,10 +128,10 @@ For testing before a stable release:
 
 ```bash
 # Beta release
-cd packages/core && npm version 1.0.0-beta.1
+cd packages/core && npm version 1.1.0-beta.1
 npm publish --access public --tag beta
 
-cd packages/adonisjs && npm version 1.0.0-beta.1
+cd packages/adonisjs && npm version 1.1.0-beta.1
 npm publish --access public --tag beta
 ```
 
@@ -108,22 +142,22 @@ pnpm add @mojura/core@beta @mojura/adonisjs@beta
 
 ## Using Local Packages (Development)
 
-During development, use pnpm workspace linking instead of publishing:
+During development, use local references instead of publishing.
 
-### Link via pnpm workspace
+### Option A: File Path Reference (Recommended)
 
-In your `pgw-core` project's `package.json`:
+In your project's `package.json`:
 
 ```json
 {
   "dependencies": {
-    "@mojura/core": "workspace:*",
-    "@mojura/adonisjs": "workspace:*"
+    "@mojura/core": "file:../mojura/packages/core",
+    "@mojura/adonisjs": "file:../mojura/packages/adonisjs"
   }
 }
 ```
 
-Or use npm link:
+### Option B: npm link
 
 ```bash
 # In mojura/packages/core
@@ -136,16 +170,21 @@ npm link
 npm link @mojura/core @mojura/adonisjs
 ```
 
-### Alternative: File Path Reference
+### Option C: pnpm workspace (monorepo only)
+
+If your project is inside the same monorepo:
 
 ```json
 {
   "dependencies": {
-    "@mojura/core": "file:../mojura/packages/core",
-    "@mojura/adonisjs": "file:../mojura/packages/adonisjs"
+    "@mojura/core": "workspace:*",
+    "@mojura/adonisjs": "workspace:*"
   }
 }
 ```
+
+> [!CAUTION]
+> `workspace:*` only works inside pnpm workspaces. Never publish a package with `workspace:*` using `npm publish` — it will break installation for consumers.
 
 ## Automated Publishing (CI/CD)
 
@@ -186,8 +225,8 @@ jobs:
 
 - [ ] All tests pass
 - [ ] `pnpm build` succeeds with no errors
-- [ ] Version numbers are bumped correctly
-- [ ] `package.json` exports are pointing to `build/` directory
+- [ ] Version number is bumped (npm rejects duplicate versions)
+- [ ] `package.json` dependencies use real semver ranges (no `workspace:*`)
+- [ ] `package.json` exports point to `build/` directory
 - [ ] README.md is up to date
-- [ ] CHANGELOG.md is updated (if maintained)
 - [ ] `files` field in package.json includes only needed directories
