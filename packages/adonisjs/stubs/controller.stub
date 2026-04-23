@@ -1,0 +1,24 @@
+{{#var controllerName = generators.controllerName(name)}}
+{{#var controllerFileName = generators.controllerFileName(name)}}
+{{{ exports({ to: app.makePath('app', 'modules', module, 'controllers', controllerFileName) }) }}}
+/**
+ * {{ controllerName }}
+ *
+ * Ultra-thin controller following Mojura Architecture.
+ * Each method delegates to a Feature via serve().
+ *
+ * @module {{ module }}
+ */
+
+import { MojuraController } from '@mojura/adonisjs'
+// import { ExampleFeature } from '../features/example_feature.js'
+
+export default class {{ controllerName }} extends MojuraController {
+  /**
+   * Example method — replace with your actual Feature.
+   *
+   * async index() {
+   *   return this.serve(ListItemsFeature)
+   * }
+   */
+}

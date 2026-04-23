@@ -1,0 +1,43 @@
+{{#var jobName = string(name).pascalCase().removeSuffix('Job').suffix('Job').toString()}}
+{{#var jobFileName = string(name).snakeCase().removeSuffix('_job').suffix('_job').ext('.ts').toString()}}
+{{{ exports({ to: app.makePath('app', 'modules', module, 'jobs', jobFileName) }) }}}
+/**
+ * {{ jobName }}
+ *
+ * Asynchronous (queued) job for background processing.
+ * Dispatched via `runInQueue()` inside a Feature.
+ *
+ * Use cases:
+ * - Sending emails/notifications
+ * - Processing webhooks
+ * - Generating reports
+ * - Any task that shouldn't block the request lifecycle
+ *
+ * @module {{ module }}
+ */
+
+import { QueueableJob } from '@mojura/core'
+
+export default class {{ jobName }} extends QueueableJob {
+  /**
+   * Queue name for this job.
+   */
+  static queue = 'default'
+
+  /**
+   * Number of retry attempts on failure.
+   */
+  static attempts = 3
+
+  constructor(private params: Record<string, any>) {
+    super()
+  }
+
+  /**
+   * Execute the queued job.
+   */
+  async handle(): Promise<void> {
+    // Implement your background logic here
+    // Access parameters via this.params
+  }
+}

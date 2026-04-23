@@ -1,0 +1,52 @@
+{
+  "name": "@mojura/core",
+  "version": "1.0.0",
+  "description": "Framework-agnostic core for Mojura Architecture - Feature/Job pattern for scalable applications",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    },
+    "./feature": {
+      "types": "./build/feature.d.ts",
+      "import": "./build/feature.js"
+    },
+    "./job": {
+      "types": "./build/job.d.ts",
+      "import": "./build/job.js"
+    },
+    "./queueable_job": {
+      "types": "./build/queueable_job.d.ts",
+      "import": "./build/queueable_job.js"
+    },
+    "./types": {
+      "types": "./build/types.d.ts",
+      "import": "./build/types.js"
+    }
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "mojura",
+    "architecture",
+    "feature",
+    "job",
+    "modular",
+    "scalable",
+    "clean-architecture"
+  ],
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  }
+}

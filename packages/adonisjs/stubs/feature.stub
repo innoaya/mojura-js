@@ -1,0 +1,35 @@
+{{#var featureName = string(name).pascalCase().removeSuffix('Feature').suffix('Feature').toString()}}
+{{#var featureFileName = string(name).snakeCase().removeSuffix('_feature').suffix('_feature').ext('.ts').toString()}}
+{{{ exports({ to: app.makePath('app', 'modules', module, 'features', featureFileName) }) }}}
+/**
+ * {{ featureName }}
+ *
+ * Orchestrates validation, job execution, and response building.
+ * Features serve a single purpose — favor many focused features
+ * over a few complex ones.
+ *
+ * @module {{ module }}
+ */
+
+import type { HttpContext } from '@adonisjs/core/http'
+import { Feature } from '@mojura/core'
+// import { ExampleJob } from '../jobs/example_job.js'
+
+export default class {{ featureName }} extends Feature<HttpContext> {
+  /**
+   * Execute the feature.
+   */
+  async handle(ctx: HttpContext) {
+    // 1. Validate the request
+    // const payload = await ctx.request.validateUsing(someValidator)
+
+    // 2. Run job(s)
+    // const data = await this.run(ExampleJob, { ...payload })
+
+    // 3. Optionally dispatch async jobs
+    // await this.runInQueue(NotificationJob, { ... })
+
+    // 4. Return response
+    return ctx.response.ok({ message: 'Success' })
+  }
+}

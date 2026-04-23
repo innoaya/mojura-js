@@ -1,0 +1,34 @@
+{{#var validatorName = string(name).snakeCase().removeSuffix('_validator').suffix('_validator').toString()}}
+{{#var validatorFileName = string(validatorName).ext('.ts').toString()}}
+{{{ exports({ to: app.makePath('app', 'modules', module, 'validators', validatorFileName) }) }}}
+/**
+ * {{ validatorName }}
+ *
+ * Request validation schema using VineJS.
+ * Used inside Features to validate incoming request data.
+ *
+ * @module {{ module }}
+ */
+
+import vine from '@vinejs/vine'
+
+/**
+ * Validation schema for creating a resource.
+ */
+export const create{{ string(name).pascalCase().toString() }}Validator = vine.compile(
+  vine.object({
+    // Define your validation rules here
+    // name: vine.string().trim().minLength(1).maxLength(255),
+    // email: vine.string().email(),
+  })
+)
+
+/**
+ * Validation schema for updating a resource.
+ */
+export const update{{ string(name).pascalCase().toString() }}Validator = vine.compile(
+  vine.object({
+    // Define your validation rules here
+    // name: vine.string().trim().minLength(1).maxLength(255).optional(),
+  })
+)

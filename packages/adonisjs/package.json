@@ -1,0 +1,71 @@
+{
+  "name": "@mojura/adonisjs",
+  "version": "1.0.0",
+  "description": "AdonisJS v7 adapter for Mojura Architecture - Ace CLI commands, stubs, and controller integration",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./build/src/index.js",
+  "types": "./build/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/src/index.d.ts",
+      "import": "./build/src/index.js"
+    },
+    "./controller": {
+      "types": "./build/src/controller.d.ts",
+      "import": "./build/src/controller.js"
+    },
+    "./commands": {
+      "types": "./build/commands/main.d.ts",
+      "import": "./build/commands/main.js"
+    },
+    "./mojura_provider": {
+      "types": "./build/providers/mojura_provider.d.ts",
+      "import": "./build/providers/mojura_provider.js"
+    },
+    "./types": {
+      "types": "./build/src/types.d.ts",
+      "import": "./build/src/types.js"
+    }
+  },
+  "files": [
+    "build",
+    "stubs"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build",
+    "copy:stubs": "cp -r stubs build/stubs"
+  },
+  "keywords": [
+    "mojura",
+    "adonisjs",
+    "adonis",
+    "architecture",
+    "feature",
+    "job",
+    "modular",
+    "ace-command",
+    "scaffolding"
+  ],
+  "dependencies": {
+    "@mojura/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@adonisjs/assembler": "^7.0.0 || ^8.0.0",
+    "@adonisjs/core": "^6.0.0 || ^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@adonisjs/assembler": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^8.0.0",
+    "@adonisjs/core": "^7.3.1",
+    "@types/node": "^25.6.0",
+    "typescript": "~5.7.3"
+  }
+}

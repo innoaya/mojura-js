@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ESNext"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./build",
+    "rootDir": "./src"
+  }
+}

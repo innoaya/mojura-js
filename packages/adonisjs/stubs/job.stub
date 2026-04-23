@@ -1,0 +1,33 @@
+{{#var jobName = string(name).pascalCase().removeSuffix('Job').suffix('Job').toString()}}
+{{#var jobFileName = string(name).snakeCase().removeSuffix('_job').suffix('_job').ext('.ts').toString()}}
+{{{ exports({ to: app.makePath('app', 'modules', module, 'jobs', jobFileName) }) }}}
+/**
+ * {{ jobName }}
+ *
+ * Single-responsibility business logic unit.
+ * Jobs contain the actual work — no HTTP concerns, no validation.
+ *
+ * Principles:
+ * - A Job executes a Single Responsibility
+ * - Jobs shall NOT call other Jobs
+ * - Keep logic concise and flat
+ *
+ * @module {{ module }}
+ */
+
+import { Job } from '@mojura/core'
+
+export default class {{ jobName }} extends Job {
+  constructor(private params: Record<string, any>) {
+    super()
+  }
+
+  /**
+   * Execute the job.
+   */
+  async handle() {
+    // Implement your business logic here
+    // Access parameters via this.params
+    return this.params
+  }
+}
