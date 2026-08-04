@@ -1,6 +1,6 @@
 {
   "name": "@mojura/adonisjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AdonisJS v7 adapter for Mojura Architecture - Ace CLI commands, stubs, and controller integration",
   "type": "module",
   "license": "Apache-2.0",

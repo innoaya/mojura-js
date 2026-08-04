@@ -31,6 +31,7 @@
 
 export { MojuraController } from './controller.js'
 export { Feature, Job, QueueableJob } from '@mojura/core'
+export { configure } from '../configure.js'
 
 export type {
   FeatureInterface,
